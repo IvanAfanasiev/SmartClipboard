@@ -7,6 +7,17 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <ListBox ItemsSource="{Binding ClipboardItems}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="4">
+                        <TextBlock Text="{Binding Content}" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding Timestamp}" FontSize="10" Foreground="Gray"/>
+                        <TextBlock Text="{Binding Type}" FontSize="10" Foreground="DarkGreen"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
     </Grid>
 </Window>
