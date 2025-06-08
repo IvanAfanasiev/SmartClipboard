@@ -33,7 +33,10 @@ namespace SmartClipboard
             
             Loaded += (_, _) =>
             {
-                _watcher = new ClipboardWatcher(this, OnClipboardTextCopied);
+                _watcher = new ClipboardWatcher(this,
+                    onTextCopied: OnClipboardTextCopied,
+                    onImageCopied: OnClipboardImageCopied,
+                    onFilesCopied: OnClipboardFilesCopied);
                 _mainViewModel.LoadData();
             };
 
@@ -48,6 +51,20 @@ namespace SmartClipboard
             Dispatcher.Invoke(() =>
             {
                 _mainViewModel.SaveClipboardText(text);
+            });
+        }
+        private void OnClipboardImageCopied(BitmapSource image)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                _mainViewModel.SaveClipboardImage(image);
+            });
+        }
+        private void OnClipboardFilesCopied(IEnumerable<string> paths)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                _mainViewModel.SaveClipboardFiles(paths);
             });
         }
     }

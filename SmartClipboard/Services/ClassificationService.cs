@@ -24,6 +24,8 @@ namespace SmartClipboard.Services
         Link,
         Email,
         Code,
+        Image,
+        File,
         Unknown
     }
 }
