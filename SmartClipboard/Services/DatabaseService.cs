@@ -22,8 +22,11 @@ namespace SmartClipboard.Services
             CREATE TABLE IF NOT EXISTS ClipboardItems (
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Content TEXT NOT NULL,
+                FilePathList TEXT,
+                ImagePath TEXT,
                 Timestamp TEXT NOT NULL,
-                Type TEXT NOT NULL
+                Type TEXT NOT NULL,
+                IsPinned INTEGER NOT NULL DEFAULT 0
             );");
         }
         public void InsertClipboardItem(ClipboardItem item)
@@ -41,8 +44,8 @@ namespace SmartClipboard.Services
         public List<ClipboardItem> GetAllItems()
         {
             using var conn = new SQLiteConnection(_dbPath);
-
-            var rows = conn.Query("SELECT * FROM ClipboardItems ORDER BY Timestamp DESC");
+            string query = "SELECT * FROM ClipboardItems ORDER BY IsPinned DESC, Timestamp DESC";
+            var rows = conn.Query(query);
             var result = new List<ClipboardItem>();
 
             foreach (var row in rows)
