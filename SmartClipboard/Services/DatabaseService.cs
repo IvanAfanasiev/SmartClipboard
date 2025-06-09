@@ -8,6 +8,7 @@ using Dapper;
 using SmartClipboard.Models;
 using System.Windows;
 using System.IO;
+using System.Text.Json;
 
 namespace SmartClipboard.Services
 {
@@ -23,6 +24,7 @@ namespace SmartClipboard.Services
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Content TEXT NOT NULL,
                 FilePathList TEXT,
+                FilePath TEXT,
                 ImagePath TEXT,
                 Timestamp TEXT NOT NULL,
                 Type TEXT NOT NULL,
@@ -32,10 +34,16 @@ namespace SmartClipboard.Services
         public void InsertClipboardItem(ClipboardItem item)
         {
             using var conn = new SQLiteConnection(_dbPath);
-            conn.Execute("INSERT INTO ClipboardItems (Content, Timestamp, Type) VALUES (@Content, @Timestamp, @Type)",
+            conn.Execute("INSERT INTO ClipboardItems " +
+                "(Content, Timestamp, Type, FilePath, FilePathList, ImagePath) " +
+                "VALUES " +
+                "(@Content, @Timestamp, @Type, @FilePath, @FilePathList, @ImagePath)",
                 new
                 {
                     Content = item.Content,
+                    FilePath = item.FilePath,
+                    FilePathList = JsonSerializer.Serialize(item.FilePathList),
+                    ImagePath = item.ImagePath,
                     Timestamp = DateTime.Now.ToString("s"),
                     Type = item.Type
                 });
@@ -46,14 +54,19 @@ namespace SmartClipboard.Services
             using var conn = new SQLiteConnection(_dbPath);
             string query = "SELECT * FROM ClipboardItems ORDER BY IsPinned DESC, Timestamp DESC";
             var rows = conn.Query(query);
-            var result = new List<ClipboardItem>();
 
+            var result = new List<ClipboardItem>();
             foreach (var row in rows)
             {
                 result.Add(new ClipboardItem
                 {
                     Id = row.Id,
                     Content = row.Content,
+                    FilePathList = string.IsNullOrWhiteSpace((string?)row.FilePathList)
+                        ? String.Empty
+                        : JsonSerializer.Deserialize<string>((string)row.FilePathList),
+                    ImagePath = row.ImagePath,
+                    FilePath = row.FilePath,
                     Timestamp = DateTime.Parse(row.Timestamp),
                     Type = Enum.TryParse<ContentType>((string)row.Type, out var type) ? type : ContentType.Unknown
                 });
@@ -61,5 +74,12 @@ namespace SmartClipboard.Services
 
             return result;
         }
+
+        public void UpdateClipboardItem(ClipboardItem item)
+        {
+            using var conn = new SQLiteConnection(_dbPath);
+            conn.Execute("UPDATE ClipboardItems SET IsPinned = @IsPinned WHERE Id = @Id", item);
+        }
+
     }
 }

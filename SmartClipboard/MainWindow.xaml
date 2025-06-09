@@ -4,8 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SmartClipboard"
+        xmlns:local1="clr-namespace:SmartClipboard.Utilities"
         mc:Ignorable="d"
         Title="MainWindow" Height="250" Width="400">
+    <Window.Resources>
+        <local1:PinConverter x:Key="PinConverter" />
+    </Window.Resources>
     <Grid>
         <ListBox ItemsSource="{Binding ClipboardItems}"  HorizontalAlignment="Stretch" Grid.RowSpan="2">
             <ListBox.ItemTemplate>
@@ -15,8 +19,14 @@
                                    TextTrimming="CharacterEllipsis"/>
                         <Image Source="{Binding ImagePreview}" MaxHeight="75" Visibility="{Binding Type}" />
                         <TextBlock Text="{Binding FilePathList}" TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding ImagePath}" TextWrapping="Wrap" />
                         <TextBlock Text="{Binding Timestamp}" FontSize="10" Foreground="Gray"/>
                         <TextBlock Text="{Binding Type}" FontSize="10" Foreground="DarkGreen"/>
+                        <Button 
+                            Content="{Binding IsPinned, Converter={StaticResource PinConverter}}"
+                            Command="{Binding DataContext.TogglePinCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                            CommandParameter="{Binding}" Width="80">
+                        </Button>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

@@ -1,5 +1,6 @@
 ﻿using SmartClipboard.Models;
 using SmartClipboard.Services;
+using SmartClipboard.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace SmartClipboard.ViewModels
@@ -24,10 +26,13 @@ namespace SmartClipboard.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        public ICommand TogglePinCommand { get; }
+
         public MainViewModel()
         {
             _dbService = new DatabaseService();
             LoadData();
+            TogglePinCommand = new RelayCommand<ClipboardItem>(TogglePin);
         }
 
         public void SaveClipboardText(string text)
@@ -43,9 +48,7 @@ namespace SmartClipboard.ViewModels
                 Timestamp = DateTime.Now,
                 Type = ClassificationService.Classify(text)
             };
-
-            _dbService.InsertClipboardItem(item);
-            ClipboardItems.Insert(0, item);
+            InsertItem(item);
         }
         public void SaveClipboardImage(BitmapSource image)
         {
@@ -72,13 +75,12 @@ namespace SmartClipboard.ViewModels
 
             var item = new ClipboardItem
             {
+                Content = "screenshot",
                 Timestamp = DateTime.Now,
                 ImagePath = fullPath,
                 Type = ContentType.Image,
             };
-
-            _dbService.InsertClipboardItem(item);
-            ClipboardItems.Insert(0, item);
+            InsertItem(item);
         }
         public void SaveClipboardFiles(IEnumerable<string> paths)
         {
@@ -94,16 +96,40 @@ namespace SmartClipboard.ViewModels
                     FilePath = path,
                     Type = ContentType.File
                 };
-
-                _dbService.InsertClipboardItem(item);
-                ClipboardItems.Insert(0, item);
+                InsertItem(item);
             }
         }
+        public void TogglePin(ClipboardItem item)
+        {
+            item.IsPinned = !item.IsPinned;
+            MessageBox.Show(""+item.IsPinned);
+            UpdateItem(item);
+        }
 
+        void UpdateItem(ClipboardItem item)
+        {
+            _dbService.UpdateClipboardItem(item);
+            LoadData();
+        }
+        void InsertItem(ClipboardItem item)
+        {
+            _dbService.InsertClipboardItem(item);
+            int insertIndex = ClipboardItems.TakeWhile(i => i.IsPinned).Count();
+            ClipboardItems.Insert(insertIndex, item);
+            LoadData();
+        }
 
         public void LoadData()
         {
             var items = _dbService.GetAllItems();
+            SortClipboardItems(items);
+        }
+        private void SortClipboardItems(IEnumerable<ClipboardItem> items)
+        {
+            items
+                .OrderByDescending(i => i.IsPinned)
+                .ThenByDescending(i => i.Timestamp)
+                .ToList();
             ClipboardItems.Clear();
             foreach (var item in items)
                 ClipboardItems.Add(item);
