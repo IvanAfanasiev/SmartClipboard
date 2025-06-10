@@ -26,13 +26,12 @@ namespace SmartClipboard.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public ICommand TogglePinCommand { get; }
+        public ICommand TogglePinCommand => new RelayCommand<ClipboardItem>(TogglePin);
 
         public MainViewModel()
         {
             _dbService = new DatabaseService();
             LoadData();
-            TogglePinCommand = new RelayCommand<ClipboardItem>(TogglePin);
         }
 
         public void SaveClipboardText(string text)
@@ -102,15 +101,10 @@ namespace SmartClipboard.ViewModels
         public void TogglePin(ClipboardItem item)
         {
             item.IsPinned = !item.IsPinned;
-            MessageBox.Show(""+item.IsPinned);
-            UpdateItem(item);
+            _dbService.UpdateClipboardItem(item);
+            SortClipboardItems(ClipboardItems);
         }
 
-        void UpdateItem(ClipboardItem item)
-        {
-            _dbService.UpdateClipboardItem(item);
-            LoadData();
-        }
         void InsertItem(ClipboardItem item)
         {
             _dbService.InsertClipboardItem(item);
@@ -126,12 +120,12 @@ namespace SmartClipboard.ViewModels
         }
         private void SortClipboardItems(IEnumerable<ClipboardItem> items)
         {
-            items
+            var sortedItems = items
                 .OrderByDescending(i => i.IsPinned)
                 .ThenByDescending(i => i.Timestamp)
                 .ToList();
             ClipboardItems.Clear();
-            foreach (var item in items)
+            foreach (var item in sortedItems)
                 ClipboardItems.Add(item);
         }
 

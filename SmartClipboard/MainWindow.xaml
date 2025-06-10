@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SmartClipboard"
-        xmlns:local1="clr-namespace:SmartClipboard.Utilities"
+        xmlns:converters="clr-namespace:SmartClipboard.Utilities"
         mc:Ignorable="d"
         Title="MainWindow" Height="250" Width="400">
     <Window.Resources>
-        <local1:PinConverter x:Key="PinConverter" />
+        <converters:PinConverter x:Key="PinConverter" />
     </Window.Resources>
     <Grid>
         <ListBox ItemsSource="{Binding ClipboardItems}"  HorizontalAlignment="Stretch" Grid.RowSpan="2">
@@ -25,12 +25,11 @@
                         <Button 
                             Content="{Binding IsPinned, Converter={StaticResource PinConverter}}"
                             Command="{Binding DataContext.TogglePinCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                            CommandParameter="{Binding}" Width="80">
-                        </Button>
+                            CommandParameter="{Binding}" Width="80" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-
     </Grid>
+
 </Window>
