@@ -68,7 +68,8 @@ namespace SmartClipboard.Services
                     ImagePath = row.ImagePath,
                     FilePath = row.FilePath,
                     Timestamp = DateTime.Parse(row.Timestamp),
-                    Type = Enum.TryParse<ContentType>((string)row.Type, out var type) ? type : ContentType.Unknown
+                    Type = Enum.TryParse<ContentType>((string)row.Type, out var type) ? type : ContentType.Unknown,
+                    IsPinned = row.IsPinned == 1
                 });
             }
 
