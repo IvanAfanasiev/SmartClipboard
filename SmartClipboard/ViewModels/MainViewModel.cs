@@ -22,6 +22,18 @@ namespace SmartClipboard.ViewModels
         private string _lastText = string.Empty;
         private string? _lastImageHash;
 
+        private string _searchQuery = string.Empty;
+        public string SearchQuery
+        {
+            get => _searchQuery;
+            set
+            {
+                _searchQuery = value;
+                OnPropertyChanged(nameof(SearchQuery));
+                SearchItems();
+            }
+        }
+
         public ObservableCollection<ClipboardItem> ClipboardItems { get; } = new();
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -60,7 +72,12 @@ namespace SmartClipboard.ViewModels
             _lastImageHash = hash;
 
             string filename = $"screenshot_{DateTime.Now:yyyyMMdd_HHmmssfff}.png";
-            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SmartClipboard", "Images");
+            string folder = 
+                Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "SmartClipboard", 
+                        "Images"
+                    );
 
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
@@ -124,8 +141,24 @@ namespace SmartClipboard.ViewModels
                 .OrderByDescending(i => i.IsPinned)
                 .ThenByDescending(i => i.Timestamp)
                 .ToList();
+            UpdateClipboard(sortedItems);
+        }
+
+        public void SearchItems()
+        {
+            var items = _dbService.GetAllItems();
+            var filteredItems = items
+               .OrderByDescending(i => i.IsPinned)
+               .ThenByDescending(i => i.Timestamp)
+               .Where(i => i.Content.ToLower().Contains(_searchQuery.ToLower()))
+               .ToList();
+            UpdateClipboard(filteredItems);
+        }
+
+        void UpdateClipboard(IEnumerable<ClipboardItem> items)
+        {
             ClipboardItems.Clear();
-            foreach (var item in sortedItems)
+            foreach (var item in items)
                 ClipboardItems.Add(item);
         }
 
