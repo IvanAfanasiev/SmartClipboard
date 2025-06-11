@@ -10,8 +10,15 @@
     <Window.Resources>
         <converters:PinConverter x:Key="PinConverter" />
     </Window.Resources>
-    <Grid>
-        <ListBox ItemsSource="{Binding ClipboardItems}"  HorizontalAlignment="Stretch" Grid.RowSpan="2">
+    <Grid Margin="0,35,0,0">
+        <TextBox 
+            HorizontalAlignment="Left" TextWrapping="Wrap"
+            VerticalAlignment="Top" Width="400" Height="30" 
+            Margin="0,-35,0,0" FontSize="14"
+            Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+            />
+
+        <ListBox ItemsSource="{Binding ClipboardItems}" Margin="0,0,0,0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="4">
