@@ -35,15 +35,18 @@ namespace SmartClipboard.ViewModels
         }
 
         public ObservableCollection<ClipboardItem> ClipboardItems { get; } = new();
+        public ObservableCollection<ContentType> AvailableTypes { get; set; } = new();
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public ICommand TogglePinCommand => new RelayCommand<ClipboardItem>(TogglePin);
+        public ICommand FilterByTypeCommand => new RelayCommand<ContentType>(FilterByType);
 
         public MainViewModel()
         {
             _dbService = new DatabaseService();
             LoadData();
+            GetAvailableTypes();
         }
 
         public void SaveClipboardText(string text)
@@ -60,6 +63,7 @@ namespace SmartClipboard.ViewModels
                 Type = ClassificationService.Classify(text)
             };
             InsertItem(item);
+            GetAvailableTypes();
         }
         public void SaveClipboardImage(BitmapSource image)
         {
@@ -97,6 +101,7 @@ namespace SmartClipboard.ViewModels
                 Type = ContentType.Image,
             };
             InsertItem(item);
+            GetAvailableTypes();
         }
         public void SaveClipboardFiles(IEnumerable<string> paths)
         {
@@ -114,7 +119,9 @@ namespace SmartClipboard.ViewModels
                 };
                 InsertItem(item);
             }
+            GetAvailableTypes();
         }
+
         public void TogglePin(ClipboardItem item)
         {
             item.IsPinned = !item.IsPinned;
@@ -125,9 +132,13 @@ namespace SmartClipboard.ViewModels
         void InsertItem(ClipboardItem item)
         {
             _dbService.InsertClipboardItem(item);
+            if (!string.IsNullOrWhiteSpace(SearchQuery))
+            {
+                SearchItems();
+                return;
+            }
             int insertIndex = ClipboardItems.TakeWhile(i => i.IsPinned).Count();
             ClipboardItems.Insert(insertIndex, item);
-            LoadData();
         }
 
         public void LoadData()
@@ -135,6 +146,7 @@ namespace SmartClipboard.ViewModels
             var items = _dbService.GetAllItems();
             SortClipboardItems(items);
         }
+
         private void SortClipboardItems(IEnumerable<ClipboardItem> items)
         {
             var sortedItems = items
@@ -148,11 +160,30 @@ namespace SmartClipboard.ViewModels
         {
             var items = _dbService.GetAllItems();
             var filteredItems = items
-               .OrderByDescending(i => i.IsPinned)
-               .ThenByDescending(i => i.Timestamp)
                .Where(i => i.Content.ToLower().Contains(_searchQuery.ToLower()))
                .ToList();
-            UpdateClipboard(filteredItems);
+            SortClipboardItems(filteredItems);
+        }
+
+        void FilterByType(ContentType selectedType)
+        {
+            var filtered = _dbService
+                .GetAllItems()
+                .Where(i => selectedType == ContentType.All || i.Type == selectedType)
+                .ToList();
+            SortClipboardItems(filtered);
+        }
+
+        void GetAvailableTypes()
+        {
+            var items = _dbService.GetAllItems();
+            var types = new[] { ContentType.All }
+                .Concat(items.Select(x => x.Type).Distinct())
+                .ToList();
+
+            AvailableTypes.Clear();
+            foreach (var t in types)
+                AvailableTypes.Add(t);
         }
 
         void UpdateClipboard(IEnumerable<ClipboardItem> items)
