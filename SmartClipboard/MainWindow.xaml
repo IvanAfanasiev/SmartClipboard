@@ -4,21 +4,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SmartClipboard"
-        xmlns:converters="clr-namespace:SmartClipboard.Utilities"
+        xmlns:converters="clr-namespace:SmartClipboard.Utilities.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="250" Width="400">
     <Window.Resources>
         <converters:PinConverter x:Key="PinConverter" />
+        <converters:ContentTypeConverter x:Key="ContentTypeConverter" />
     </Window.Resources>
-    <Grid Margin="0,35,0,0">
-        <TextBox 
-            HorizontalAlignment="Left" TextWrapping="Wrap"
-            VerticalAlignment="Top" Width="400" Height="30" 
-            Margin="0,-35,0,0" FontSize="14"
-            Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+    <Grid>
+
+        <ItemsControl ItemsSource="{Binding AvailableTypes}" HorizontalAlignment="Left" Width="45">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Content="{Binding Converter={StaticResource ContentTypeConverter}}" 
+                        Command="{Binding DataContext.FilterByTypeCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        CommandParameter="{Binding}" 
+                        Margin="5" Width="30" Height="30" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <TextBox TextWrapping="Wrap"
+            VerticalAlignment="Top" Height="30" FontSize="14"
+            Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" Margin="50,0,0,0"
             />
 
-        <ListBox ItemsSource="{Binding ClipboardItems}" Margin="0,0,0,0">
+        <ListBox ItemsSource="{Binding ClipboardItems}" Margin="50,35,0,0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="4">
@@ -30,7 +41,7 @@
                         <TextBlock Text="{Binding Timestamp}" FontSize="10" Foreground="Gray"/>
                         <TextBlock Text="{Binding Type}" FontSize="10" Foreground="DarkGreen"/>
                         <Button 
-                            Content="{Binding IsPinned, Converter={StaticResource PinConverter}}"
+                          Content="{Binding IsPinned, Converter={StaticResource PinConverter}}" 
                             Command="{Binding DataContext.TogglePinCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                             CommandParameter="{Binding}" Width="80" />
                     </StackPanel>

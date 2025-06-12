@@ -26,6 +26,7 @@ namespace SmartClipboard.Services
         Code,
         Image,
         File,
+        All,
         Unknown
     }
 }
