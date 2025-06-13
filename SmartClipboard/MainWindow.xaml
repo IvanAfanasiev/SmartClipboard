@@ -41,8 +41,12 @@
                         <TextBlock Text="{Binding Timestamp}" FontSize="10" Foreground="Gray"/>
                         <TextBlock Text="{Binding Type}" FontSize="10" Foreground="DarkGreen"/>
                         <Button 
-                          Content="{Binding IsPinned, Converter={StaticResource PinConverter}}" 
+                            Content="{Binding IsPinned, Converter={StaticResource PinConverter}}" 
                             Command="{Binding DataContext.TogglePinCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                            CommandParameter="{Binding}" Width="80" />
+                        <Button 
+                            Content="🗑" 
+                            Command="{Binding DataContext.DeleteItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                             CommandParameter="{Binding}" Width="80" />
                     </StackPanel>
                 </DataTemplate>

@@ -82,5 +82,11 @@ namespace SmartClipboard.Services
             conn.Execute("UPDATE ClipboardItems SET IsPinned = @IsPinned WHERE Id = @Id", item);
         }
 
+        public void DeleteClipboardItem(ClipboardItem item) 
+        {
+            using var conn = new SQLiteConnection(_dbPath);
+            conn.Execute("DELETE FROM ClipboardItems WHERE Id = @Id", item);
+        }
+
     }
 }
