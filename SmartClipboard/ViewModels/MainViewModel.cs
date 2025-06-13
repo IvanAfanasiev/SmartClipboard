@@ -28,7 +28,7 @@ namespace SmartClipboard.ViewModels
             get => _searchQuery;
             set
             {
-                _searchQuery = value;
+                _searchQuery = value.Trim();
                 OnPropertyChanged(nameof(SearchQuery));
                 SearchItems();
             }
@@ -41,6 +41,7 @@ namespace SmartClipboard.ViewModels
 
         public ICommand TogglePinCommand => new RelayCommand<ClipboardItem>(TogglePin);
         public ICommand FilterByTypeCommand => new RelayCommand<ContentType>(FilterByType);
+        public ICommand DeleteItemCommand => new RelayCommand<ClipboardItem>(DeleteItem);
 
         public MainViewModel()
         {
@@ -95,7 +96,7 @@ namespace SmartClipboard.ViewModels
 
             var item = new ClipboardItem
             {
-                Content = "screenshot",
+                Content = filename,
                 Timestamp = DateTime.Now,
                 ImagePath = fullPath,
                 Type = ContentType.Image,
@@ -127,6 +128,12 @@ namespace SmartClipboard.ViewModels
             item.IsPinned = !item.IsPinned;
             _dbService.UpdateClipboardItem(item);
             SortClipboardItems(ClipboardItems);
+        }
+
+        public void DeleteItem(ClipboardItem item)
+        {
+            _dbService.DeleteClipboardItem(item);
+            ClipboardItems.Remove(item);
         }
 
         void InsertItem(ClipboardItem item)
@@ -167,8 +174,8 @@ namespace SmartClipboard.ViewModels
 
         void FilterByType(ContentType selectedType)
         {
-            var filtered = _dbService
-                .GetAllItems()
+            var items = _dbService.GetAllItems();
+            var filtered = items
                 .Where(i => selectedType == ContentType.All || i.Type == selectedType)
                 .ToList();
             SortClipboardItems(filtered);
