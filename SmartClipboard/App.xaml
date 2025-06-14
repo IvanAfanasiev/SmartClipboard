@@ -4,6 +4,18 @@
              xmlns:local="clr-namespace:SmartClipboard"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource x:Key="GroupedItems" Source="{Binding ClipboardItems}">
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="GroupDate" />
+                </CollectionViewSource.GroupDescriptions>
+            </CollectionViewSource>
+            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        </ResourceDictionary>
+
     </Application.Resources>
 </Application>

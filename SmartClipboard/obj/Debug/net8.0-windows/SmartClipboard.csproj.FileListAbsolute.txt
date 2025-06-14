@@ -28,3 +28,5 @@ C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\SmartClipboard\obj\
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\SmartClipboard\obj\Debug\net8.0-windows\SmartClipboard.genruntimeconfig.cache
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\SmartClipboard\obj\Debug\net8.0-windows\ref\SmartClipboard.dll
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\SmartClipboard\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\SmartClipboard\obj\Debug\net8.0-windows\App.baml
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\SmartClipboard\obj\Debug\net8.0-windows\Styles.baml

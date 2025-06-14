@@ -88,5 +88,13 @@ namespace SmartClipboard.Services
             conn.Execute("DELETE FROM ClipboardItems WHERE Id = @Id", item);
         }
 
+        public void ClearAllItems()
+        {
+            using var conn = new SQLiteConnection(_dbPath);
+
+            conn.Execute("DELETE FROM ClipboardItems;" +
+                        "DELETE FROM sqlite_sequence WHERE name='ClipboardItems';");
+        }
+
     }
 }
