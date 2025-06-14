@@ -7,11 +7,11 @@ using System.Windows.Input;
 
 namespace SmartClipboard.Utilities
 {
-    class RelayCommand : ICommand
+    internal class RelayTypedCommand<T> : ICommand
     {
-        private readonly Action _execute;
+        private readonly Action<T> _execute;
 
-        public RelayCommand(Action execute)
+        public RelayTypedCommand(Action<T> execute)
         {
             _execute = execute;
         }
@@ -20,6 +20,9 @@ namespace SmartClipboard.Utilities
 
         public bool CanExecute(object? parameter) => true;
 
-        public void Execute(object? parameter) => _execute();
+        public void Execute(object? parameter)
+        {
+            if (parameter is T t) _execute(t);
+        }
     }
 }

@@ -39,9 +39,10 @@ namespace SmartClipboard.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public ICommand TogglePinCommand => new RelayCommand<ClipboardItem>(TogglePin);
-        public ICommand FilterByTypeCommand => new RelayCommand<ContentType>(FilterByType);
-        public ICommand DeleteItemCommand => new RelayCommand<ClipboardItem>(DeleteItem);
+        public ICommand TogglePinCommand => new RelayTypedCommand<ClipboardItem>(TogglePin);
+        public ICommand FilterByTypeCommand => new RelayTypedCommand<ContentType>(FilterByType);
+        public ICommand DeleteItemCommand => new RelayTypedCommand<ClipboardItem>(DeleteItem);
+        public ICommand ClearDatabaseCommand => new RelayCommand(ClearClipboard);
 
         public MainViewModel()
         {
@@ -134,6 +135,7 @@ namespace SmartClipboard.ViewModels
         {
             _dbService.DeleteClipboardItem(item);
             ClipboardItems.Remove(item);
+            GetAvailableTypes();
         }
 
         void InsertItem(ClipboardItem item)
@@ -146,6 +148,7 @@ namespace SmartClipboard.ViewModels
             }
             int insertIndex = ClipboardItems.TakeWhile(i => i.IsPinned).Count();
             ClipboardItems.Insert(insertIndex, item);
+            GetAvailableTypes();
         }
 
         public void LoadData()
@@ -198,6 +201,22 @@ namespace SmartClipboard.ViewModels
             ClipboardItems.Clear();
             foreach (var item in items)
                 ClipboardItems.Add(item);
+        }
+
+        void ClearClipboard()
+        {
+            var result = MessageBox.Show(
+                "Are you sure you want to delete all entries from the clipboard?",
+                "Clipboard Cleanup",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            _dbService.ClearAllItems();
+            ClipboardItems.Clear();
+            GetAvailableTypes();
         }
 
         protected void OnPropertyChanged(string propertyName)
