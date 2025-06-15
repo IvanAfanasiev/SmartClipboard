@@ -99,6 +99,17 @@
         </Style.Triggers>
     </Style>
 
+    <!-- DeleteButtonStyle -->
+    <Style x:Key="DeleteButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsPinned}" Value="True">
+                <Setter Property="IsEnabled" Value="False" />
+                <Setter Property="Opacity" Value="0.5" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    
+    
     <!-- Search Box -->
     <Style x:Key="SearchBoxStyle" TargetType="TextBox">
         <Setter Property="Margin" Value="1,10,7,0"/>
@@ -110,6 +121,7 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="CaretBrush" Value="White"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
+        
     </Style>
 
 
