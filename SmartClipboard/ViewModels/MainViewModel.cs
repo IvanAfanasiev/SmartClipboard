@@ -33,6 +33,18 @@ namespace SmartClipboard.ViewModels
                 SearchItems();
             }
         }
+        object? _selectedClipboardItem;
+        public object? SelectedClipboardItem
+        {
+            get => _selectedClipboardItem;
+            set
+            {
+                _selectedClipboardItem = value;
+                SetClipboardItemCommand.Execute(value);
+            }
+        }
+
+        bool _suppressClipboardUpdate = false;
 
         public ObservableCollection<ClipboardItem> ClipboardItems { get; } = new();
         public ObservableCollection<ContentType> AvailableTypes { get; set; } = new();
@@ -43,12 +55,14 @@ namespace SmartClipboard.ViewModels
         public ICommand FilterByTypeCommand => new RelayTypedCommand<ContentType>(FilterByType);
         public ICommand DeleteItemCommand => new RelayTypedCommand<ClipboardItem>(DeleteItem);
         public ICommand ClearDatabaseCommand => new RelayCommand(ClearClipboard);
+        public ICommand SetClipboardItemCommand => new RelayTypedCommand<ClipboardItem>(SetClipboardItem);
 
         public MainViewModel()
         {
             _dbService = new DatabaseService();
             LoadData();
             GetAvailableTypes();
+            _selectedClipboardItem = null;
         }
 
         public void SaveClipboardText(string text)
@@ -140,6 +154,8 @@ namespace SmartClipboard.ViewModels
 
         void InsertItem(ClipboardItem item)
         {
+            if (_suppressClipboardUpdate)
+                return;
             _dbService.InsertClipboardItem(item);
             if (!string.IsNullOrWhiteSpace(SearchQuery))
             {
@@ -148,6 +164,7 @@ namespace SmartClipboard.ViewModels
             }
             int insertIndex = ClipboardItems.TakeWhile(i => i.IsPinned).Count();
             ClipboardItems.Insert(insertIndex, item);
+            _selectedClipboardItem = ClipboardItems.Last();
             GetAvailableTypes();
         }
 
@@ -215,8 +232,39 @@ namespace SmartClipboard.ViewModels
                 return;
 
             _dbService.ClearAllItems();
-            ClipboardItems.Clear();
+            LoadData();
             GetAvailableTypes();
+        }
+
+        void SetClipboardItem(ClipboardItem item)
+        {
+            _suppressClipboardUpdate = true;
+            if (item.Type == ContentType.Image)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Clipboard.SetImage(item.ImagePreview);
+                    _suppressClipboardUpdate = false;
+                });
+            }
+            else if (item.Type == ContentType.File)
+            {
+                var filePaths = item.FilePathList;
+                var data = new DataObject(DataFormats.FileDrop, filePaths?.ToArray());
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Clipboard.SetDataObject(data, true);
+                    _suppressClipboardUpdate = false;
+                });
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Clipboard.SetText(item.Content);
+                    _suppressClipboardUpdate = false;
+                });
+            }
         }
 
         protected void OnPropertyChanged(string propertyName)

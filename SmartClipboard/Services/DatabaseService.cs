@@ -92,7 +92,7 @@ namespace SmartClipboard.Services
         {
             using var conn = new SQLiteConnection(_dbPath);
 
-            conn.Execute("DELETE FROM ClipboardItems;" +
+            conn.Execute("DELETE FROM ClipboardItems WHERE IsPinned != 1;" +
                         "DELETE FROM sqlite_sequence WHERE name='ClipboardItems';");
         }
 
