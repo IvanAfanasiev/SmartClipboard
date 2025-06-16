@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "0XFPDmLFokI=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ivana\\Desktop\\portfol\\SmartClipboard\\SmartClipboard\\src\\SmartClipboard\\SmartClipboard.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ivana\\.nuget\\packages\\dapper\\2.1.66\\dapper.2.1.66.nupkg.sha512",
+    "C:\\Users\\ivana\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.135\\microsoft.xaml.behaviors.wpf.1.1.135.nupkg.sha512",
+    "C:\\Users\\ivana\\.nuget\\packages\\stub.system.data.sqlite.core.netstandard\\1.0.119\\stub.system.data.sqlite.core.netstandard.1.0.119.nupkg.sha512",
+    "C:\\Users\\ivana\\.nuget\\packages\\system.data.sqlite.core\\1.0.119\\system.data.sqlite.core.1.0.119.nupkg.sha512"
+  ],
+  "logs": []
+}

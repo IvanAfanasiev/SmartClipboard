@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36202.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartClipboard", "SmartClipboard\SmartClipboard.csproj", "{B9111F73-2EC2-4E75-8664-CF6E5091C37A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartClipboard.Tests", "..\tests\SmartClipboard.Tests\SmartClipboard.Tests.csproj", "{84333CB2-BF2B-481F-94D2-12A21C06926C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9111F73-2EC2-4E75-8664-CF6E5091C37A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9111F73-2EC2-4E75-8664-CF6E5091C37A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9111F73-2EC2-4E75-8664-CF6E5091C37A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9111F73-2EC2-4E75-8664-CF6E5091C37A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84333CB2-BF2B-481F-94D2-12A21C06926C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84333CB2-BF2B-481F-94D2-12A21C06926C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84333CB2-BF2B-481F-94D2-12A21C06926C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84333CB2-BF2B-481F-94D2-12A21C06926C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D24D2F93-8150-4F1B-B1FD-5985E98B4343}
+	EndGlobalSection
+EndGlobal
