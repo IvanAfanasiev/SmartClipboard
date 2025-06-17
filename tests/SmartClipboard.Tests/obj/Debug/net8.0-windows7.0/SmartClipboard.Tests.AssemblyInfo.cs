@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartClipboard.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+65287b5174b5bec23a29abf7473f32310374563a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+acf5d6d3ad271474186800ae30a564ca1cac7a1e")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartClipboard.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartClipboard.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

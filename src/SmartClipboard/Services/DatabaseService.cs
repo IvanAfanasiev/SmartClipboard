@@ -25,7 +25,6 @@ namespace SmartClipboard.Services
                 Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Content TEXT NOT NULL,
                 FilePathList TEXT,
-                FilePath TEXT,
                 ImagePath TEXT,
                 Timestamp TEXT NOT NULL,
                 Type TEXT NOT NULL,

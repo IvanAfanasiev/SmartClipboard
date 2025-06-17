@@ -113,3 +113,7 @@ C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\tests\SmartClipboar
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\tests\SmartClipboard.Tests\obj\Debug\net8.0-windows7.0\SmartClipboard.Tests.pdb
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\tests\SmartClipboard.Tests\obj\Debug\net8.0-windows7.0\SmartClipboard.Tests.genruntimeconfig.cache
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\tests\SmartClipboard.Tests\obj\Debug\net8.0-windows7.0\ref\SmartClipboard.Tests.dll
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\tests\SmartClipboard.Tests\bin\Debug\net8.0-windows7.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\tests\SmartClipboard.Tests\bin\Debug\net8.0-windows7.0\System.Drawing.Common.dll
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\tests\SmartClipboard.Tests\bin\Debug\net8.0-windows7.0\System.Private.Windows.Core.dll
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\tests\SmartClipboard.Tests\bin\Debug\net8.0-windows7.0\runtimes\win\lib\net8.0\Microsoft.Win32.SystemEvents.dll
