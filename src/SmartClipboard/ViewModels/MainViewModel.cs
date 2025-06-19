@@ -19,6 +19,7 @@ namespace SmartClipboard.ViewModels
     public class MainViewModel: INotifyPropertyChanged
     {
         private readonly IDatabaseService _dbService;
+        public SettingsService Settings { get; }
         private string? _lastImageHash;
 
         private string _searchQuery = string.Empty;
@@ -56,8 +57,9 @@ namespace SmartClipboard.ViewModels
         public ICommand ClearDatabaseCommand => new RelayCommand(ClearClipboard);
         public ICommand SetClipboardItemCommand => new RelayTypedCommand<ClipboardItem>(SetClipboardItem);
 
-        public MainViewModel(IDatabaseService dbService)
+        public MainViewModel(IDatabaseService dbService, SettingsService settingsService)
         {
+            Settings = settingsService;
             _dbService = dbService;
             LoadData();
             GetAvailableTypes();
@@ -217,7 +219,7 @@ namespace SmartClipboard.ViewModels
                 ClipboardItems.Add(item);
         }
 
-        void ClearClipboard()
+        public void ClearClipboard()
         {
             var result = MessageBox.Show(
                 "Are you sure you want to delete all entries from the clipboard?",
@@ -227,7 +229,15 @@ namespace SmartClipboard.ViewModels
 
             if (result != MessageBoxResult.Yes)
                 return;
+            Clipboard.Clear();
+            _dbService.ClearAllItems();
+            LoadData();
+            GetAvailableTypes();
+        }
 
+        public void ClearClipboardWithoutAsking()
+        {
+            Clipboard.Clear();
             _dbService.ClearAllItems();
             LoadData();
             GetAvailableTypes();
@@ -267,6 +277,11 @@ namespace SmartClipboard.ViewModels
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Dispose()
+        {
+            _dbService.VacuumDatabase();
         }
     }
 

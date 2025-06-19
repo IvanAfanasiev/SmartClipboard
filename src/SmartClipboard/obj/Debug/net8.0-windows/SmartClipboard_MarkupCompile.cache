@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\App.xaml
-2787170672
-
-15-410199846
+5-940613130
+1387616439
+20671392652
 201694207435
-MainWindow.xaml;Styles.xaml;
+MainWindow.xaml;Styles\Dark.xaml;Styles\Light.xaml;Styles\Styles.xaml;Views\SettingsWindow.xaml;
 
 False
 

@@ -14,5 +14,6 @@ namespace SmartClipboard.Utilities
         void UpdateClipboardItem(ClipboardItem item);
         void DeleteClipboardItem(ClipboardItem item);
         void ClearAllItems();
+        void VacuumDatabase();
     }
 }

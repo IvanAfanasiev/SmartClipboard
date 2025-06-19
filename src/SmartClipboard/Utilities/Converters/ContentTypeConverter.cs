@@ -18,7 +18,7 @@ namespace SmartClipboard.Utilities.Converters
                 ContentType.All => "💯",
                 ContentType.Text => "📝",
                 ContentType.Email => "📧",
-                ContentType.Code => "💻",
+                ContentType.Code => "{ }",
                 ContentType.Image => "🖼",
                 ContentType.File => "📁",
                 ContentType.Link => "🌐",

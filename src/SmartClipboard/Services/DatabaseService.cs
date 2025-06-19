@@ -10,14 +10,17 @@ using System.Windows;
 using System.IO;
 using System.Text.Json;
 using SmartClipboard.Utilities;
+using System.Diagnostics;
 
 namespace SmartClipboard.Services
 {
     internal class DatabaseService: IDatabaseService
     {
         private readonly string _dbPath = "Data Source=clipboard.db";
+        private readonly SettingsService _settingsService;
 
-        public DatabaseService()
+
+        public DatabaseService(SettingsService settingsService)
         {
             using var conn = new SQLiteConnection(_dbPath);
             conn.Execute(@"
@@ -30,30 +33,49 @@ namespace SmartClipboard.Services
                 Type TEXT NOT NULL,
                 IsPinned INTEGER NOT NULL DEFAULT 0
             );");
+            _settingsService = settingsService;
         }
         public void InsertClipboardItem(ClipboardItem item)
         {
             using var conn = new SQLiteConnection(_dbPath);
-            conn.Execute("INSERT INTO ClipboardItems " +
-                "(Content, Timestamp, Type, FilePath, FilePathList, ImagePath) " +
-                "VALUES " +
-                "(@Content, @Timestamp, @Type, @FilePath, @FilePathList, @ImagePath)",
-                new
-                {
-                    Content = item.Content,
-                    FilePath = item.FilePath,
-                    FilePathList = JsonSerializer.Serialize(item.FilePathList),
-                    ImagePath = item.ImagePath,
-                    Timestamp = DateTime.Now.ToString("s"),
-                    Type = item.Type
-                });
-        }
 
+            const string insertQuery = @"INSERT INTO ClipboardItems " +
+                "(Content, Timestamp, Type, FilePathList, ImagePath) " +
+                "VALUES " +
+                "(@Content, @Timestamp, @Type, @FilePathList, @ImagePath);";
+
+            conn.Execute(insertQuery, item);
+
+            if (_settingsService.MaxItems > 0)
+            {
+                const string countQuery = "SELECT COUNT(*) FROM ClipboardItems WHERE IsPinned = 0;";
+                int count = conn.ExecuteScalar<int>(countQuery);
+
+                if (count > _settingsService.MaxItems)
+                {
+                    const string deleteQuery = @"
+                        DELETE FROM ClipboardItems
+                        WHERE Id = (
+                            SELECT Id FROM ClipboardItems
+                            WHERE IsPinned = 0
+                            ORDER BY Timestamp ASC
+                            LIMIT 1
+                        );";
+                    conn.Execute(deleteQuery);
+                }
+            }
+        }
         public List<ClipboardItem> GetAllItems()
         {
             using var conn = new SQLiteConnection(_dbPath);
-            string query = "SELECT * FROM ClipboardItems ORDER BY IsPinned DESC, Timestamp DESC";
-            var rows = conn.Query(query);
+
+            var query = new StringBuilder();
+            query.Append("SELECT * FROM ClipboardItems ORDER BY IsPinned DESC, Timestamp DESC");
+
+            if (_settingsService.MaxItems > 0)
+                query.Append(" LIMIT ").Append(_settingsService.MaxItems);
+
+            var rows = conn.Query(query.ToString());
 
             var result = new List<ClipboardItem>();
             foreach (var row in rows)
@@ -94,6 +116,21 @@ namespace SmartClipboard.Services
 
             conn.Execute("DELETE FROM ClipboardItems WHERE IsPinned != 1;" +
                         "DELETE FROM sqlite_sequence WHERE name='ClipboardItems';");
+        }
+        public void VacuumDatabase()
+        {
+            try
+            {
+                using var conn = new SQLiteConnection(_dbPath);
+                conn.Open();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = "VACUUM;";
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("VACUUM error: " + ex.Message);
+            }
         }
 
     }

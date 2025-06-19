@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartClipboard")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+acf5d6d3ad271474186800ae30a564ca1cac7a1e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+58dbcc1983c97ed0abd9db475a5535b6768ad401")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartClipboard")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartClipboard")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

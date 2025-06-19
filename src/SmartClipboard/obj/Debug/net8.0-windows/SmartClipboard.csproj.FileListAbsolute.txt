@@ -44,7 +44,6 @@ C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\bin\Debug\net8.0-windows\runtimes\win-x64\native\SQLite.Interop.dll
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\bin\Debug\net8.0-windows\runtimes\win-x86\native\SQLite.Interop.dll
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\SmartClipboard.csproj.AssemblyReference.cache
-C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\Styles.baml
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\MainWindow.g.cs
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\App.g.cs
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
@@ -64,3 +63,10 @@ C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\SmartClipboard.pdb
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\SmartClipboard.genruntimeconfig.cache
 C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\ref\SmartClipboard.dll
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\SmartClipboard_Content.g.cs
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\Views\SettingsWindow.g.cs
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\bin\Debug\net8.0-windows\SmartClipboard.dll.config
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\Views\SettingsWindow.baml
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\Styles\Dark.baml
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\Styles\Light.baml
+C:\Users\ivana\Desktop\portfol\SmartClipboard\SmartClipboard\src\SmartClipboard\obj\Debug\net8.0-windows\Styles\Styles.baml
