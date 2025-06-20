@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace SmartClipboard.Models
 {
-    internal class ClipboardItem: INotifyPropertyChanged
+    public class ClipboardItem: INotifyPropertyChanged
     {
         public long Id { get; set; }
         public string Content { get; set; } = string.Empty;
