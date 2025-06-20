@@ -19,7 +19,7 @@ namespace SmartClipboard
             var mockDB = new Mock<IDatabaseService>();
             mockDB.Setup(x => x.GetAllItems()).Returns(new List<ClipboardItem>());
 
-            var viewModel = new MainViewModel(mockDB.Object);
+            var viewModel = new MainViewModel(mockDB.Object, new SettingsService());
             string text = "Hello, clipboard!";
 
             viewModel.SaveClipboardText(text);
@@ -37,7 +37,7 @@ namespace SmartClipboard
             var mockDB = new Mock<IDatabaseService>();
             mockDB.Setup(x => x.GetAllItems()).Returns(new List<ClipboardItem>());
 
-            var viewModel = new MainViewModel(mockDB.Object);
+            var viewModel = new MainViewModel(mockDB.Object, new SettingsService());
 
             viewModel.SaveClipboardText(text);
 
@@ -49,7 +49,7 @@ namespace SmartClipboard
             var mockDB = new Mock<IDatabaseService>();
             mockDB.Setup(x => x.GetAllItems()).Returns(new List<ClipboardItem>());
 
-            var viewModel = new MainViewModel(mockDB.Object);
+            var viewModel = new MainViewModel(mockDB.Object, new SettingsService());
             string text1 = "Hello, clipboard!";
             string text2 = "Bye, clipboard!";
 
@@ -70,7 +70,7 @@ namespace SmartClipboard
             var mockDB = new Mock<IDatabaseService>();
             mockDB.Setup(x => x.GetAllItems()).Returns(new List<ClipboardItem>());
 
-            var viewModel = new MainViewModel(mockDB.Object);
+            var viewModel = new MainViewModel(mockDB.Object, new SettingsService());
 
             var imageSource = CreateTestBitmapSource();
 
@@ -101,7 +101,7 @@ namespace SmartClipboard
             var mockDB = new Mock<IDatabaseService>();
             mockDB.Setup(x => x.GetAllItems()).Returns(new List<ClipboardItem>());
 
-            var viewModel = new MainViewModel(mockDB.Object);
+            var viewModel = new MainViewModel(mockDB.Object, new SettingsService());
 
             var files = new List<string> { @"C:\temp\file1.txt", "C:\\temp\\file2.txt" };
 

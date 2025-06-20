@@ -33,6 +33,10 @@ namespace SmartClipboard
 
             _settingsService = new SettingsService();
             _settingsService.ApplyTheme();
+            if (_settingsService.AutoStart)
+            {
+                AutoStartService.EnsureAutoStartEntry();
+            }
             _mainViewModel = new MainViewModel(new DatabaseService(_settingsService), _settingsService);
             DataContext = _mainViewModel;
             

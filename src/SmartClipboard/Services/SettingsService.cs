@@ -11,18 +11,15 @@ namespace SmartClipboard.Services
 {
     public class SettingsService : INotifyPropertyChanged
     {
-        bool _autoStart;
         public bool AutoStart
         {
-            get => _autoStart;
+            get => Properties.Settings.Default.AutoStart;
             set
             {
-                if (_autoStart != value)
-                {
-                    _autoStart = value;
-                    OnPropertyChanged();
-                    AutoStartService.SetAutoStart(_autoStart);
-                }
+                Properties.Settings.Default.AutoStart = value;
+                Properties.Settings.Default.Save();
+                OnPropertyChanged();
+                AutoStartService.SetAutoStart(AutoStart);
             }
         }
         public int MaxItems
@@ -57,7 +54,6 @@ namespace SmartClipboard.Services
                 }
             }
         }
-
 
         public void ApplyTheme()
         {

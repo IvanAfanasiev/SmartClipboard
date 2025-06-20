@@ -33,5 +33,21 @@ namespace SmartClipboard.Services
             else
                 key.DeleteValue(AppName, false);
         }
+
+        public static void EnsureAutoStartEntry()
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(RunKeyPath, true);
+            if (key == null) return;
+
+            string exePath = Process.GetCurrentProcess().MainModule?.FileName ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(exePath)) return;
+
+            var currentValue = key.GetValue(AppName) as string;
+
+            if (string.IsNullOrWhiteSpace(currentValue) || currentValue.Trim('"') != exePath)
+            {
+                key.SetValue(AppName, $"\"{exePath}\"");
+            }
+        }
     }
 }

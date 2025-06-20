@@ -16,7 +16,8 @@ namespace SmartClipboard.Services
 {
     internal class DatabaseService: IDatabaseService
     {
-        private readonly string _dbPath = "Data Source=clipboard.db";
+        private readonly string _dbPath = $"Data Source={GetDatabasePath()}";
+        
         private readonly SettingsService _settingsService;
 
 
@@ -35,6 +36,17 @@ namespace SmartClipboard.Services
             );");
             _settingsService = settingsService;
         }
+        private static string GetDatabasePath()
+        {
+            var folder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "SmartClipboard"
+            );
+            Directory.CreateDirectory(folder);
+            return Path.Combine(folder, "clipboard.db");
+        }
+
+
         public void InsertClipboardItem(ClipboardItem item)
         {
             using var conn = new SQLiteConnection(_dbPath);
