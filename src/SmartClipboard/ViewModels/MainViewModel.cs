@@ -16,10 +16,10 @@ using System.Windows.Media.Imaging;
 
 namespace SmartClipboard.ViewModels
 {
-    internal class MainViewModel: INotifyPropertyChanged
+    public class MainViewModel: INotifyPropertyChanged
     {
-        private readonly DatabaseService _dbService = new();
-        private string _lastText = string.Empty;
+        private readonly IDatabaseService _dbService;
+        public SettingsService Settings { get; }
         private string? _lastImageHash;
 
         private string _searchQuery = string.Empty;
@@ -33,6 +33,18 @@ namespace SmartClipboard.ViewModels
                 SearchItems();
             }
         }
+        object? _selectedClipboardItem;
+        public object? SelectedClipboardItem
+        {
+            get => _selectedClipboardItem;
+            set
+            {
+                _selectedClipboardItem = value;
+                SetClipboardItemCommand.Execute(value);
+            }
+        }
+
+        bool _suppressClipboardUpdate = false;
 
         public ObservableCollection<ClipboardItem> ClipboardItems { get; } = new();
         public ObservableCollection<ContentType> AvailableTypes { get; set; } = new();
@@ -43,20 +55,28 @@ namespace SmartClipboard.ViewModels
         public ICommand FilterByTypeCommand => new RelayTypedCommand<ContentType>(FilterByType);
         public ICommand DeleteItemCommand => new RelayTypedCommand<ClipboardItem>(DeleteItem);
         public ICommand ClearDatabaseCommand => new RelayCommand(ClearClipboard);
+        public ICommand SetClipboardItemCommand => new RelayTypedCommand<ClipboardItem>(SetClipboardItem);
 
-        public MainViewModel()
+        public MainViewModel(IDatabaseService dbService, SettingsService settingsService)
         {
-            _dbService = new DatabaseService();
+            Settings = settingsService;
+            _dbService = dbService;
             LoadData();
             GetAvailableTypes();
+            _selectedClipboardItem = null;
         }
 
         public void SaveClipboardText(string text)
         {
-            if (string.IsNullOrWhiteSpace(text) || text == _lastText)
+            if (string.IsNullOrWhiteSpace(text))
                 return;
-
-            _lastText = text;
+            ClipboardItem? existingItem = ClipboardItems.FirstOrDefault(item => item.Content == text);
+            if (existingItem != null)
+            {
+                ClipboardItems.Remove(existingItem);
+                ClipboardItems.Add(existingItem);
+                return;
+            }
 
             var item = new ClipboardItem
             {
@@ -69,7 +89,6 @@ namespace SmartClipboard.ViewModels
         }
         public void SaveClipboardImage(BitmapSource image)
         {
-            _lastText = String.Empty;
             var hash = ImageUtils.GetImageHash(image);
 
             if (hash == _lastImageHash)
@@ -107,20 +126,14 @@ namespace SmartClipboard.ViewModels
         }
         public void SaveClipboardFiles(IEnumerable<string> paths)
         {
-            _lastText = String.Empty;
-            
-            foreach (var path in paths)
+            var item = new ClipboardItem
             {
-                var item = new ClipboardItem
-                {
-                    Timestamp = DateTime.Now,
-                    Content = string.Join(",\n", paths.Select(Path.GetFileName)),
-                    FilePathList = string.Join(";\n", paths),
-                    FilePath = path,
-                    Type = ContentType.File
-                };
-                InsertItem(item);
-            }
+                Timestamp = DateTime.Now,
+                Content = string.Join(",\n", paths.Select(Path.GetFileName)),
+                FilePathList = string.Join(";\n", paths),
+                Type = ContentType.File
+            };
+            InsertItem(item);
             GetAvailableTypes();
         }
 
@@ -140,6 +153,8 @@ namespace SmartClipboard.ViewModels
 
         void InsertItem(ClipboardItem item)
         {
+            if (_suppressClipboardUpdate)
+                return;
             _dbService.InsertClipboardItem(item);
             if (!string.IsNullOrWhiteSpace(SearchQuery))
             {
@@ -148,6 +163,7 @@ namespace SmartClipboard.ViewModels
             }
             int insertIndex = ClipboardItems.TakeWhile(i => i.IsPinned).Count();
             ClipboardItems.Insert(insertIndex, item);
+            _selectedClipboardItem = ClipboardItems.Last();
             GetAvailableTypes();
         }
 
@@ -203,7 +219,7 @@ namespace SmartClipboard.ViewModels
                 ClipboardItems.Add(item);
         }
 
-        void ClearClipboard()
+        public void ClearClipboard()
         {
             var result = MessageBox.Show(
                 "Are you sure you want to delete all entries from the clipboard?",
@@ -213,15 +229,59 @@ namespace SmartClipboard.ViewModels
 
             if (result != MessageBoxResult.Yes)
                 return;
-
+            Clipboard.Clear();
             _dbService.ClearAllItems();
-            ClipboardItems.Clear();
+            LoadData();
             GetAvailableTypes();
+        }
+
+        public void ClearClipboardWithoutAsking()
+        {
+            Clipboard.Clear();
+            _dbService.ClearAllItems();
+            LoadData();
+            GetAvailableTypes();
+        }
+
+        void SetClipboardItem(ClipboardItem item)
+        {
+            _suppressClipboardUpdate = true;
+            if (item.Type == ContentType.Image)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Clipboard.SetImage(item.ImagePreview);
+                    _suppressClipboardUpdate = false;
+                });
+            }
+            else if (item.Type == ContentType.File)
+            {
+                var filePaths = item.FilePathList;
+                var data = new DataObject(DataFormats.FileDrop, filePaths?.ToArray());
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Clipboard.SetDataObject(data, true);
+                    _suppressClipboardUpdate = false;
+                });
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Clipboard.SetText(item.Content);
+                    _suppressClipboardUpdate = false;
+                });
+            }
         }
 
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Dispose()
+        {
+            _dbService.VacuumDatabase();
         }
     }
 

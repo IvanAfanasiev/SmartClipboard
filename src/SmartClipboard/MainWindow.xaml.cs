@@ -1,6 +1,7 @@
 ﻿using SmartClipboard.Models;
 using SmartClipboard.Services;
 using SmartClipboard.ViewModels;
+using SmartClipboard.Views;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -24,15 +25,27 @@ namespace SmartClipboard
     {
         private readonly MainViewModel _mainViewModel;
         private ClipboardWatcher? _watcher;
+        private readonly SettingsService _settingsService;
 
         public MainWindow()
         {
             InitializeComponent();
-            _mainViewModel = new MainViewModel();
+
+            _settingsService = new SettingsService();
+            _settingsService.ApplyTheme();
+            if (_settingsService.AutoStart)
+            {
+                AutoStartService.EnsureAutoStartEntry();
+            }
+            _mainViewModel = new MainViewModel(new DatabaseService(_settingsService), _settingsService);
             DataContext = _mainViewModel;
             
             Loaded += (_, _) =>
             {
+                if (_mainViewModel.Settings.ClearClipboardOnStartup)
+                {
+                    _mainViewModel.ClearClipboardWithoutAsking();
+                }
                 _watcher = new ClipboardWatcher(this,
                     onTextCopied: OnClipboardTextCopied,
                     onImageCopied: OnClipboardImageCopied,
@@ -44,6 +57,13 @@ namespace SmartClipboard
             {
                 _watcher?.Dispose();
             };
+        }
+
+        private void OpenSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var settingsWindow = new SettingsWindow(_settingsService);
+            settingsWindow.Owner = this;
+            settingsWindow.ShowDialog();
         }
 
         private void OnClipboardTextCopied(string text)

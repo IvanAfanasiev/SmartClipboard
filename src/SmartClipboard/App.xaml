@@ -7,7 +7,7 @@
 
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles.xaml"/>
+                <ResourceDictionary Source="Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <CollectionViewSource x:Key="GroupedItems" Source="{Binding ClipboardItems}">
                 <CollectionViewSource.GroupDescriptions>

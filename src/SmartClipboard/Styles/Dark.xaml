@@ -1,0 +1,164 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Dark Theme Palette -->
+    <Color x:Key="Primary">#FF2E2E2E</Color>
+    <Color x:Key="PrimaryDark">#FF1F1F1F</Color>
+    <Color x:Key="PrimaryLight">#808080</Color>
+    <Color x:Key="Accent">#3f3f3f</Color>
+    <Color x:Key="AccentLight">#727272</Color>
+    <Color x:Key="Background">#FF121212</Color>
+    <Color x:Key="Surface">#FF1E1E1E</Color>
+    <Color x:Key="TextPrimary">#FFF5F5F5</Color>
+    <Color x:Key="TextSecondary">#FFCCCCCC</Color>
+    <Color x:Key="Divider">#FF2A2A2A</Color>
+
+    <SolidColorBrush x:Key="BrushPrimary" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="BrushPrimaryDark" Color="{StaticResource PrimaryDark}"/>
+    <SolidColorBrush x:Key="BrushPrimaryLight" Color="{StaticResource PrimaryLight}"/>
+    <SolidColorBrush x:Key="BrushAccent" Color="{StaticResource Accent}"/>
+    <SolidColorBrush x:Key="BrushAccentLight" Color="{StaticResource AccentLight}"/>
+    <SolidColorBrush x:Key="BrushBackground" Color="{StaticResource Background}"/>
+    <SolidColorBrush x:Key="BrushSurface" Color="{StaticResource Surface}"/>
+    <SolidColorBrush x:Key="BrushTextPrimary" Color="{StaticResource TextPrimary}"/>
+    <SolidColorBrush x:Key="BrushTextSecondary" Color="{StaticResource TextSecondary}"/>
+    <SolidColorBrush x:Key="BrushDivider" Color="{StaticResource Divider}"/>
+
+    <Style x:Key="MainButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource BrushBackground}"/>
+        <Setter Property="Foreground" Value="#FFF5F5F5"/>
+    </Style>
+
+
+    <!-- Main Window -->
+    <SolidColorBrush x:Key="WindowBackground" Color="{StaticResource Background}" />
+    <SolidColorBrush x:Key="WindowForeground" Color="{StaticResource TextPrimary}" />
+
+
+    <!-- ListBox -->
+    <Style TargetType="ListBox">
+        <Setter Property="Background" Value="{StaticResource BrushBackground}" />
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}" />
+        <Setter Property="Padding" Value="0 5" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+    </Style>
+
+    <!-- ListBox Item -->
+    <Style TargetType="ListBoxItem">
+        <Setter Property="Margin" Value="0,0,0,10"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="Background" Value="{StaticResource BrushPrimary}"/>
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BrushDivider}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect ShadowDepth="1" BlurRadius="3" Opacity="0.1" />
+            </Setter.Value>
+        </Setter>
+
+        <!-- Hover + Selected -->
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource BrushPrimaryLight}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BrushAccentLight}" />
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource BrushAccentLight}" />
+                <Setter Property="Foreground" Value="White" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <!-- Button -->
+    <Style x:Key="ButtonStyle" TargetType="Button">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Background" Value="{StaticResource BrushPrimary}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BrushDivider}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Foreground" Value="{StaticResource BrushTextPrimary}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource BrushPrimaryLight}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- DeleteButtonStyle -->
+    <Style x:Key="DeleteButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsPinned}" Value="True">
+                <Setter Property="IsEnabled" Value="False" />
+                <Setter Property="Opacity" Value="0.5" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <!-- Search Box -->
+    <Style x:Key="SearchBoxStyle" TargetType="TextBox">
+        <Setter Property="Margin" Value="1,10,7,0"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="Background" Value="{StaticResource BrushAccent}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CaretBrush" Value="White"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource BrushTextPrimary}" />
+
+
+    </Style>
+
+
+    <!-- ScrollBar -->
+    <Style TargetType="ScrollBar" x:Key="MinimalScrollBar">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Width" Value="6" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid Background="Transparent">
+                        <Track Name="PART_Track" IsDirectionReversed="true" Focusable="false">
+                            <Track.Thumb>
+                                <Thumb x:Name="Thumb">
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Border Background="{StaticResource BrushPrimary}"
+                                                    CornerRadius="3"
+                                                    Margin="1" />
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+</ResourceDictionary>

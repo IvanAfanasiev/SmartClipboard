@@ -6,13 +6,14 @@
         xmlns:local="clr-namespace:SmartClipboard"
         xmlns:converters="clr-namespace:SmartClipboard.Utilities.Converters"
         mc:Ignorable="d"
-        Title="Clipboard" Height="250" Width="400"
+        Title="Clipboard" MinHeight="200" Height="250" MinWidth="200" Width="400"
         Background="{DynamicResource WindowBackground}" 
         Foreground="{DynamicResource WindowForeground}"
         >
     <Window.Resources>
         <converters:PinConverter x:Key="PinConverter" />
         <converters:ContentTypeConverter x:Key="ContentTypeConverter" />
+        <converters:VisibilityConverter x:Key="VisibilityConverter"/>
     </Window.Resources>
     <Grid x:Name="RootGrid">
 
@@ -27,7 +28,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto"  Background="{StaticResource BrushPrimaryDark}">
+            <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto"  Background="{DynamicResource BrushPrimaryDark}">
                 <ScrollViewer.Resources>
                     <Style TargetType="ScrollBar" BasedOn="{StaticResource MinimalScrollBar}" />
                 </ScrollViewer.Resources>
@@ -36,37 +37,56 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Button Content="{Binding Converter={StaticResource ContentTypeConverter}}" 
-                            Style="{StaticResource ButtonStyle}"
+                            Style="{DynamicResource ButtonStyle}"
                             Command="{Binding DataContext.FilterByTypeCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                             CommandParameter="{Binding}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-
+            <Button Grid.Row="1" Content="⚙" 
+                    Style="{DynamicResource ButtonStyle}"
+                    Margin="5,5,5,50" Height="40" VerticalAlignment="Bottom"
+                    Click="OpenSettings_Click"
+                    />
             <Button Grid.Row="1" Content="❌"
-            Style="{StaticResource ButtonStyle}"
-            Margin="0,10,0,5"
-            Foreground="Red"
-            Command="{Binding ClearDatabaseCommand}"/>
-            
-        </Grid>
+                Style="{DynamicResource ButtonStyle}"
+                Margin="5,0,5,5"
+                Foreground="Red"
+                Command="{Binding ClearDatabaseCommand}" Height="40" VerticalAlignment="Bottom"/>
 
+        </Grid>
         <Grid Grid.Column="1" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBox Grid.Row="0" Height="40"
-                     VerticalContentAlignment="Center"
-             Style="{StaticResource SearchBoxStyle}"
-             Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}">
+            <TextBox Grid.Row="0"
+         Height="40"
+         VerticalContentAlignment="Center"
+         Style="{DynamicResource SearchBoxStyle}"
+         Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox.Template>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                            <TextBlock Text="search..."
+                                Foreground="Gray"
+                                Margin="12,0,0,0"
+                                VerticalAlignment="Center"
+                                IsHitTestVisible="False"
+                                Visibility="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VisibilityConverter}}" />
+                        </Grid>
+                    </ControlTemplate>
+                </TextBox.Template>
             </TextBox>
 
             <ListBox Grid.Row="1" ItemsSource="{Binding ClipboardItems}" HorizontalContentAlignment="Stretch"
                      MaxWidth="{Binding ActualWidth, ElementName=RootGrid}"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     SelectedItem="{Binding SelectedClipboardItem, Mode=TwoWay}"
+                     >
                 <ListBox.Resources>
                     <Style TargetType="ScrollBar" BasedOn="{StaticResource MinimalScrollBar}" />
                 </ListBox.Resources>
@@ -88,10 +108,10 @@
                                                         <Setter.Value>
                                                             <DataTemplate>
                                                                 <Image Source="{Binding ImagePreview}" 
-                                                                       MaxHeight="100" 
-                                                                       Stretch="Uniform"
-                                                                       HorizontalAlignment="Left"
-                                                                       />
+                                                                           MaxHeight="100" 
+                                                                           Stretch="Uniform"
+                                                                           HorizontalAlignment="Left"
+                                                                           />
                                                             </DataTemplate>
                                                         </Setter.Value>
                                                     </Setter>
@@ -101,9 +121,9 @@
                                                 <Setter.Value>
                                                     <DataTemplate>
                                                         <TextBlock Text="{Binding Content}"
-                                                           TextWrapping="Wrap"
-                                                           TextTrimming="CharacterEllipsis"
-                                                           MaxHeight="60"/>
+                                                               TextWrapping="Wrap"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               MaxHeight="60"/>
                                                     </DataTemplate>
                                                 </Setter.Value>
                                             </Setter>
@@ -119,23 +139,23 @@
                             </StackPanel>
 
                             <StackPanel Grid.Column="1"
-                                Orientation="Vertical"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Top"
-                                Margin="5,0,0,0">
+                                        Orientation="Vertical"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        Margin="5,0,0,0">
                                 <Button 
-                                Content="{Binding IsPinned, Converter={StaticResource PinConverter}}" 
-                                Style="{StaticResource ButtonStyle}"
-                                Width="30" Height="30"
-                                Command="{Binding DataContext.TogglePinCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                CommandParameter="{Binding}" 
-                                Margin="0,0,0,5" />
+                                        Content="{Binding IsPinned, Converter={StaticResource PinConverter}}" 
+                                        Style="{DynamicResource ButtonStyle}"
+                                        Width="30" Height="30"
+                                        Command="{Binding DataContext.TogglePinCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}" 
+                                        Margin="0,0,0,5" />
                                 <Button 
-                                Content="🗑"
-                                Style="{StaticResource ButtonStyle}"
-                                Width="30" Height="30"
-                                Command="{Binding DataContext.DeleteItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                CommandParameter="{Binding}" />
+                                        Content="🗑"
+                                        Style="{DynamicResource DeleteButtonStyle}"
+                                        Width="30" Height="30"
+                                        Command="{Binding DataContext.DeleteItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}" />
                             </StackPanel>
                         </Grid>
                     </DataTemplate>
